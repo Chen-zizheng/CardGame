@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d40efeead4d2fb34fbe5f3ed7d3f36d5, type: 3}
+  m_Name: DefaultMapConfig
+  m_EditorClassIdentifier: Assembly-CSharp::MapConfig
+  totalLayers: 7
+  minNodesPerLayer: 2
+  maxNodesPerLayer: 4
+  layerVerticalSpacing: 150
+  nodeHorizontalSpacing: 200
+  normalNodeChance: 0.6
+  eliteNodeChance: 0.2
+  campfireNodeChance: 0.15
+  shopNodeChance: 0.05
+  bossLayerIndex: 6
+  campfireLayerIndices: 0200000005000000

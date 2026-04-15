@@ -1,0 +1,93 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8514d0876ee5adf44890b7fdd5daead1, type: 3}
+  m_Name: RangerData
+  m_EditorClassIdentifier: 
+  characterName: "\u6E38\u4FA0"
+  characterSprite: {fileID: 21300000, guid: ec11bfbe86c5687469b4b93c67f4a7f6, type: 3}
+  battleSprite: {fileID: 21300000, guid: 30a92da601f739b43a1cd2172b16266a, type: 3}
+  maxHp: 40
+  passiveSkill: 1
+  initialDeck:
+  - cardName: "\u666E\u901A\u653B\u51FB"
+    damage: 4
+    description: "\u666E\u666E\u901A\u901A"
+    cardType: 0
+    rareColor: {r: 0, g: 0, b: 0, a: 0}
+    cost: 1
+    hpCost: 0
+    energyGain: 0
+    isRetain: 0
+    isDesperation: 0
+    healAmount: 0
+    cardBackgroundSprite: {fileID: 21300000, guid: 9515e2dff4c3ab2419ffffa83d370b39, type: 3}
+  - cardName: "\u666E\u901A\u653B\u51FB"
+    damage: 4
+    description: "\u666E\u666E\u901A\u901A"
+    cardType: 0
+    rareColor: {r: 0, g: 0, b: 0, a: 0}
+    cost: 1
+    hpCost: 0
+    energyGain: 0
+    isRetain: 0
+    isDesperation: 0
+    healAmount: 0
+    cardBackgroundSprite: {fileID: 21300000, guid: 9515e2dff4c3ab2419ffffa83d370b39, type: 3}
+  - cardName: "\u683C\u6321"
+    damage: 4
+    description: "\u62B5\u6321\u4F24\u5BB3"
+    cardType: 2
+    rareColor: {r: 0, g: 0.07725501, b: 1, a: 0}
+    cost: 1
+    hpCost: 0
+    energyGain: 0
+    isRetain: 0
+    isDesperation: 0
+    healAmount: 0
+    cardBackgroundSprite: {fileID: 21300000, guid: 57f9b994cde4d1a489151c489d2216fc, type: 3}
+  - cardName: "\u683C\u6321"
+    damage: 4
+    description: "\u62B5\u6321\u4F24\u5BB3"
+    cardType: 2
+    rareColor: {r: 0, g: 0.07725501, b: 1, a: 0}
+    cost: 1
+    hpCost: 0
+    energyGain: 0
+    isRetain: 0
+    isDesperation: 0
+    healAmount: 0
+    cardBackgroundSprite: {fileID: 21300000, guid: 57f9b994cde4d1a489151c489d2216fc, type: 3}
+  - cardName: "\u52A0\u901F"
+    damage: 1
+    description: "\u62BD\u4E00\u5F20\u724C"
+    cardType: 3
+    rareColor: {r: 0, g: 0, b: 0, a: 0}
+    cost: 1
+    hpCost: 0
+    energyGain: 2
+    isRetain: 0
+    isDesperation: 0
+    healAmount: 0
+    cardBackgroundSprite: {fileID: 21300000, guid: 6f5e17080059ec249be757c0c20d6dbb, type: 3}
+  exclusiveCardPool:
+  - cardName: "\u52A0\u901F"
+    damage: 1
+    description: "\u62BD\u4E00\u5F20\u724C"
+    cardType: 3
+    rareColor: {r: 0, g: 0, b: 0, a: 0}
+    cost: 1
+    hpCost: 0
+    energyGain: 2
+    isRetain: 0
+    isDesperation: 0
+    healAmount: 0
+    cardBackgroundSprite: {fileID: 21300000, guid: 6f5e17080059ec249be757c0c20d6dbb, type: 3}

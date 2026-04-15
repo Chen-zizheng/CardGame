@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:yousandi.cn,2023:
+--- !u!1045 &1
+EditorBuildSettings:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.scene
+    guid: c8f45601ccd886140823ec8f0ef01d9f
+  - enabled: 1
+    path: Assets/Scenes/CharacterSelectScene.scene
+    guid: 6a8bd916057242848b27a53b94c5cd8b
+  - enabled: 1
+    path: Assets/Scenes/MapScene.scene
+    guid: 2cda990e2423bbf4892e6590ba056729
+  - enabled: 1
+    path: Assets/Scenes/CampfireScene.scene
+    guid: a6bea1b1b37403743b902636ff17fe5a
+  - enabled: 1
+    path: Assets/Scenes/BattleScene.scene
+    guid: 4efe1c4110f29924696021a7425010f3
+  - enabled: 1
+    path: Assets/Scenes/RewardScene.scene
+    guid: 79346d55af3a0f44a93819f1f4018489
+  - enabled: 1
+    path: Assets/Scenes/ShopScene.scene
+    guid: c3a3c105d78e3c14b957864db1c7051f
+  - enabled: 1
+    path: Assets/Scenes/FailScene.scene
+    guid: 89878c00ddb22194986019a25cea796c
+  m_BuildProfiles: []
+  m_configObjects: {}
+  m_SlimFeaturesWeixinMiniGame:
+    ACLDecompression: 0
+    AllocateOverhead: 1
+    DecompressASTC: 0
+    DecompressDXT: 0
+    DecompressETC: 1
+    FreeTypeSfntPng: 1
+    LightProbe: 2
+    RootMotion: 0
+    UseStringInternPool: 2
