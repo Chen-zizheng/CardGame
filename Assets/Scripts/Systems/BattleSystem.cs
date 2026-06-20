@@ -86,6 +86,21 @@ public class BattleSystem : MonoBehaviour
     {
         if (GameManager.Instance == null) return;
 
+        // 【动态初始化】如果 cardViews 数组为空，自动从 HandContainer 查找
+        if (cardViews == null || cardViews.Length == 0)
+        {
+            Transform handContainer = transform.Find("HandContainer");
+            if (handContainer != null)
+            {
+                cardViews = handContainer.GetComponentsInChildren<CardView>();
+                Debug.Log($"【BattleSystem】自动找到 {cardViews.Length} 个 CardView");
+            }
+            else
+            {
+                Debug.LogError("【BattleSystem】找不到 HandContainer！");
+            }
+        }
+
         // 【诊断】打印当前牌库
         Debug.Log($"【BattleSystem】当前角色: {GameManager.Instance.currentCharacter?.characterName}");
         Debug.Log($"【BattleSystem】playerDeck 中的卡牌数: {GameManager.Instance.playerDeck.Count}");
