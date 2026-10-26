@@ -3,6 +3,13 @@
 一个基于 **团结引擎（Tuanjie 1.8.5 / 内核 Unity 2022.3）** 与 C# 开发的 **2D 卡牌 Roguelike**，
 重点探索了自定义着色器在 UI 动效与卡牌表现中的应用。
 
+## ▶ 下载试玩（Windows x64 · 免安装）
+
+**[⬇ 下载 CardGame-Windows-x64.zip（约 90 MB）](https://github.com/Chen-zizheng/CardGame/releases/download/v1.0.0/CardGame-Windows-x64.zip)**
+
+解压后双击 `CardGame.exe` 即可运行，无需安装 Unity 或团结引擎。
+若想直接看构建记录，见 [Releases](https://github.com/Chen-zizheng/CardGame/releases/tag/v1.0.0)。
+
 ## 📸 演示截图
 
 <img width="559" height="361" alt="主菜单" src="https://github.com/user-attachments/assets/7a95514b-ea77-420d-b3fd-55bd272aa389" />
