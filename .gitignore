@@ -22,3 +22,7 @@
 # OS specific
 .DS_Store
 Thumbs.db
+# 构建产物
+/Build/
+/Temp/
+/Logs/

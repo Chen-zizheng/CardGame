@@ -9,12 +9,12 @@
 
 ## 下载试玩
 
-**[⬇ CardGame-Windows-x64.zip（约 90 MB）](https://github.com/Chen-zizheng/CardGame/releases/download/v1.0.0/CardGame-Windows-x64.zip)**
+**[⬇ CardGame-Windows-x64-v1.1.zip（62 MB）](https://github.com/Chen-zizheng/CardGame/releases/download/v1.1.0/CardGame-Windows-x64-v1.1.zip)**
 
-解压双击 CardGame.exe，不用装引擎。
+解压双击 `CardGame.exe`，不用装引擎。存档在 `%USERPROFILE%\AppData\LocalLow\DefaultCompany\CardGame`。
 
-> Release 里的安装包还是 **v1.0.0**（两职业、敌人 3 种、7 层的版本）。
-> 仓库源码已经走到 **v1.1**：十层、敌人 6 种、遗物 / 本能 / 事件 / 强化全都在里面，但还没重新打包。
+> 这一版改了什么：见 [Release v1.1.0](https://github.com/Chen-zizheng/CardGame/releases/tag/v1.1.0)。
+> **v1 的存档不兼容** —— 结构变了，旧档会被清掉重开。
 
 ---
 
