@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8514d0876ee5adf44890b7fdd5daead1, type: 3}
   m_Name: WarriorData
   m_EditorClassIdentifier: 
-  characterName: "\u6218\u58EB"
+  characterName: "\u6E05\u9053\u592B"
   characterSprite: {fileID: 21300000, guid: 674238b8bf3f2794392c3f33434621ed, type: 3}
   battleSprite: {fileID: 21300000, guid: f557542c3d560184085fbf8783c49e71, type: 3}
-  maxHp: 50
+  maxHp: 65
   passiveSkill: 0
+  passiveName: "\u683C\u6321\u56DE\u8840"
+  passiveDesc: "\u683C\u6321\u771F\u7684\u6321\u4E0B\u4F24\u5BB3\u65F6\uFF0C\u56DE 2 \u70B9\u751F\u547D\u3002"
+  tagline: "\u5927\u724C \u00B7 \u786C\u5403 \u00B7 \u6162\u6162\u78E8"
   initialDeck:
   - cardName: "\u666E\u901A\u653B\u51FB"
     damage: 4

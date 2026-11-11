@@ -1,30 +1,30 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-// ±à¼­Ä£Ê½¾ÍÄÜÔ¤ÀÀĞ§¹û£¬²»ÓÃÔËĞĞÓÎÏ·
+// ç¼–è¾‘æ¨¡å¼å°±èƒ½é¢„è§ˆæ•ˆæœï¼Œä¸ç”¨è¿è¡Œæ¸¸æˆ
 [ExecuteInEditMode]
 [RequireComponent(typeof(RectTransform))]
 public class TitleBreathAnim : MonoBehaviour
 {
-    [Header("===== ÉÏÏÂ¸¡¶¯Ğ§¹û =====")]
-    [Tooltip("ÉÏÏÂ¸¡¶¯µÄ×î´ó¾àÀë£¨ÏñËØ£©£¬ÍÆ¼ö5-15")]
+    [Header("===== ä¸Šä¸‹æµ®åŠ¨æ•ˆæœ =====")]
+    [Tooltip("ä¸Šä¸‹æµ®åŠ¨çš„æœ€å¤§è·ç¦»ï¼ˆåƒç´ ï¼‰ï¼Œæ¨è5-15")]
     public float floatRange = 10f;
-    [Tooltip("¸¡¶¯ËÙ¶È£¬ÊıÖµÔ½´óÔ½¿ì£¬ÍÆ¼ö0.8-1.5")]
+    [Tooltip("æµ®åŠ¨é€Ÿåº¦ï¼Œæ•°å€¼è¶Šå¤§è¶Šå¿«ï¼Œæ¨è0.8-1.5")]
     public float floatSpeed = 1f;
 
-    [Header("===== ºôÎüËõ·ÅĞ§¹û =====")]
-    [Tooltip("Ëõ·Å·ù¶È£¬0.05=×î´ó·Å´ó5%£¬ÍÆ¼ö0.03-0.08")]
+    [Header("===== å‘¼å¸ç¼©æ”¾æ•ˆæœ =====")]
+    [Tooltip("ç¼©æ”¾å¹…åº¦ï¼Œ0.05=æœ€å¤§æ”¾å¤§5%ï¼Œæ¨è0.03-0.08")]
     public float scaleRange = 0.05f;
-    [Tooltip("Ëõ·ÅËÙ¶È£¬ºÍ¸¡¶¯ËÙ¶È±£³ÖÒ»ÖÂ¼´¿É")]
+    [Tooltip("ç¼©æ”¾é€Ÿåº¦ï¼Œå’Œæµ®åŠ¨é€Ÿåº¦ä¿æŒä¸€è‡´å³å¯")]
     public float scaleSpeed = 1f;
 
-    [Header("===== ÇáÎ¢Ğı×ªĞ§¹û£¨¿ÉÑ¡£© =====")]
-    [Tooltip("Ğı×ª×î´ó½Ç¶È£¬ÍÆ¼ö0.5-2¶È£¬ÏñËØ·ç²»ÒªÌ«´ó")]
+    [Header("===== è½»å¾®æ—‹è½¬æ•ˆæœï¼ˆå¯é€‰ï¼‰ =====")]
+    [Tooltip("æ—‹è½¬æœ€å¤§è§’åº¦ï¼Œæ¨è0.5-2åº¦ï¼Œåƒç´ é£ä¸è¦å¤ªå¤§")]
     public float rotateRange = 1f;
-    [Tooltip("Ğı×ªËÙ¶È£¬ÍÆ¼ö0.8-1.2")]
+    [Tooltip("æ—‹è½¬é€Ÿåº¦ï¼Œæ¨è0.8-1.2")]
     public float rotateSpeed = 1f;
 
-    // ¼ÇÂ¼±êÌâ³õÊ¼×´Ì¬£¬±ÜÃâ¶¯»­ÅÜ·É
+    // è®°å½•æ ‡é¢˜åˆå§‹çŠ¶æ€ï¼Œé¿å…åŠ¨ç”»è·‘é£
     private RectTransform rectTrans;
     private Vector2 startAnchoredPos;
     private Vector3 startScale;
@@ -33,7 +33,7 @@ public class TitleBreathAnim : MonoBehaviour
     void Awake()
     {
         rectTrans = GetComponent<RectTransform>();
-        // ¼ÇÂ¼³õÊ¼µÄÎ»ÖÃ¡¢Ëõ·Å¡¢Ğı×ª
+        // è®°å½•åˆå§‹çš„ä½ç½®ã€ç¼©æ”¾ã€æ—‹è½¬
         startAnchoredPos = rectTrans.anchoredPosition;
         startScale = rectTrans.localScale;
         startRotation = rectTrans.localEulerAngles;
@@ -41,23 +41,23 @@ public class TitleBreathAnim : MonoBehaviour
 
     void Update()
     {
-        // ÓÃSinº¯Êı×öÆ½»¬Ñ­»·¶¯»­£¬·¶Î§-1~1£¬ÓÀÔ¶Ñ­»·
+        // ç”¨Sinå‡½æ•°åšå¹³æ»‘å¾ªç¯åŠ¨ç”»ï¼ŒèŒƒå›´-1~1ï¼Œæ°¸è¿œå¾ªç¯
         float time = Time.time;
 
-        // 1. ÉÏÏÂ¸¡¶¯¶¯»­
+        // 1. ä¸Šä¸‹æµ®åŠ¨åŠ¨ç”»
         float floatOffset = Mathf.Sin(time * floatSpeed) * floatRange;
         rectTrans.anchoredPosition = new Vector2(startAnchoredPos.x, startAnchoredPos.y + floatOffset);
 
-        // 2. ºôÎüËõ·Å¶¯»­
+        // 2. å‘¼å¸ç¼©æ”¾åŠ¨ç”»
         float scaleOffset = Mathf.Sin(time * scaleSpeed) * scaleRange;
         rectTrans.localScale = startScale * (1 + scaleOffset);
 
-        // 3. ÇáÎ¢Ğı×ª¶¯»­
+        // 3. è½»å¾®æ—‹è½¬åŠ¨ç”»
         float rotateOffset = Mathf.Sin(time * rotateSpeed) * rotateRange;
         rectTrans.localEulerAngles = new Vector3(startRotation.x, startRotation.y, startRotation.z + rotateOffset);
     }
 
-    // ±à¼­Ä£Ê½ÏÂÖØÖÃ»Ø³õÊ¼×´Ì¬
+    // ç¼–è¾‘æ¨¡å¼ä¸‹é‡ç½®å›åˆå§‹çŠ¶æ€
     void OnDisable()
     {
         if (rectTrans != null)

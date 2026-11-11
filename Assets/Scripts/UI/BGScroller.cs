@@ -5,9 +5,9 @@ using UnityEngine.UI;
 [RequireComponent(typeof(RawImage))]
 public class BGScroller : MonoBehaviour
 {
-    [Tooltip("X轴滚动速度，正数向右，负数向左")]
+    [Tooltip("X杞存粴鍔ㄩ�熷害锛屾鏁板悜鍙筹紝璐熸暟鍚戝乏")]
     public float scrollSpeedX = 0.02f;
-    [Tooltip("Y轴滚动速度，正数向上，负数向下")]
+    [Tooltip("Y杞存粴鍔ㄩ�熷害锛屾鏁板悜涓婏紝璐熸暟鍚戜笅")]
     public float scrollSpeedY = 0.01f;
 
     private RawImage bgImage;
@@ -19,14 +19,14 @@ public class BGScroller : MonoBehaviour
 
     void Update()
     {
-        // 无限滚动核心：偏移纹理的UV坐标
+        // 鏃犻檺婊氬姩鏍稿績锛氬亸绉荤汗鐞嗙殑UV鍧愭爣
         Rect uvRect = bgImage.uvRect;
         uvRect.x += scrollSpeedX * Time.deltaTime;
         uvRect.y += scrollSpeedY * Time.deltaTime;
         bgImage.uvRect = uvRect;
     }
 
-    // 编辑模式关闭时重置UV
+    // 缂栬緫妯″紡鍏抽棴鏃堕噸缃甎V
     void OnDisable()
     {
         if (bgImage != null)

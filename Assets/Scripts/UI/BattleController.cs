@@ -20,7 +20,7 @@ public class BattleController : MonoBehaviour
         }
         else
         {
-            Debug.LogWarning("GameManager is missing in BattleScene. Èç¹ûÄãÊÇÖ±½Óµ¥¶ÀÔËĞĞ BattleScene£¬ÕâÌõ¾¯¸æÊÇÕı³£µÄ£»ÕıÊ½ÓÎÏ·Çë´Ó MainMenu ¡ú MapScene ½øÈë¡£");
+            Debug.LogWarning("GameManager is missing in BattleScene. å¦‚æœä½ æ˜¯ç›´æ¥å•ç‹¬è¿è¡Œ BattleSceneï¼Œè¿™æ¡è­¦å‘Šæ˜¯æ­£å¸¸çš„ï¼›æ­£å¼æ¸¸æˆè¯·ä» MainMenu â†’ MapScene è¿›å…¥ã€‚");
         }
     }
 

@@ -3,30 +3,53 @@ using System.Linq;
 using UnityEngine;
 
 /// <summary>
-/// ´óµØÍ¼ÏµÍ³ºËĞÄ¹ÜÀíÆ÷
-/// ¸ºÔğÉú³É¡¢´æ´¢ºÍ¹ÜÀíÕû¸öµØÍ¼µÄ½ÚµãÊı¾İ
+/// å¤§åœ°å›¾ç³»ç»Ÿæ ¸å¿ƒç®¡ç†å™¨
+/// è´Ÿè´£ç”Ÿæˆã€å­˜å‚¨å’Œç®¡ç†æ•´ä¸ªåœ°å›¾çš„èŠ‚ç‚¹æ•°æ®
 /// </summary>
 public class MapManager : MonoBehaviour
 {
     public static MapManager Instance;
 
-    [Header("µØÍ¼ÅäÖÃ")]
-    public MapConfig mapConfig; // ÍÏ×§Äã¸Õ²Å´´½¨µÄDefaultMapConfigµ½ÕâÀï
+    [Header("åœ°å›¾é…ç½®")]
+    public MapConfig mapConfig; // æ‹–æ‹½ä½ åˆšæ‰åˆ›å»ºçš„DefaultMapConfigåˆ°è¿™é‡Œ
 
-    [Header("µ÷ÊÔÑ¡Ïî")]
-    public bool generateOnStart = true; // Æô¶¯Ê±×Ô¶¯Éú³ÉµØÍ¼
-    public bool printDebugLog = true; // ´òÓ¡Éú³ÉÈÕÖ¾
+    [Header("è°ƒè¯•é€‰é¡¹")]
+    public bool generateOnStart = true; // å¯åŠ¨æ—¶è‡ªåŠ¨ç”Ÿæˆåœ°å›¾
+    public bool printDebugLog = true; // æ‰“å°ç”Ÿæˆæ—¥å¿—
 
-    // ´æ´¢ËùÓĞÉú³ÉµÄ½Úµã
+    // å­˜å‚¨æ‰€æœ‰ç”Ÿæˆçš„èŠ‚ç‚¹
     private List<MapNode> allNodes = new List<MapNode>();
-    // °´²ã´æ´¢½Úµã£¬·½±ã¿ìËÙ·ÃÎÊ
+    // æŒ‰å±‚å­˜å‚¨èŠ‚ç‚¹ï¼Œæ–¹ä¾¿å¿«é€Ÿè®¿é—®
     private Dictionary<int, List<MapNode>> nodesByLayer = new Dictionary<int, List<MapNode>>();
 
     private int nextNodeId = 0;
 
+    // è¿™å¼ åœ°å›¾æ˜¯ä»å­˜æ¡£é“ºå›æ¥çš„ï¼šStart æ—¶ä¸è¦å†ç”Ÿæˆä¸€å¼ æ–°çš„
+    private bool restoredFromSave;
+
+    [Header("éšæœºç§å­ï¼ˆåŒä¸€ç§å­å¿…ç„¶é•¿å‡ºä¸€æ¨¡ä¸€æ ·çš„åœ°å›¾ï¼‰")]
+    public int mapSeed;
+
+    // åœ°å›¾ç”Ÿæˆç”¨å¸¦ç§å­çš„éšæœºæºï¼Œä¸å†ç¢° UnityEngine.Randomï¼š
+    // è¿™æ ·ä¸€å±€çš„å¸ƒå±€å¯ä»¥è¢«æŠ„ä¸‹æ¥ã€å¤ç°ã€å†™è¿›å­˜æ¡£ï¼Œè¯»æ¡£æ—¶æ‰ä¸ä¼šé•¿å‡ºå¦ä¸€å¼ å›¾ã€‚
+    private CardCombat.SeededRandom rng;
+
+    private int Rand(int minInclusive, int maxExclusive)
+    {
+        if (rng == null) rng = new CardCombat.SeededRandom(mapSeed != 0 ? mapSeed : 1);
+        if (maxExclusive <= minInclusive) return minInclusive;
+        return minInclusive + rng.Next(maxExclusive - minInclusive);
+    }
+
+    private float RandValue()
+    {
+        if (rng == null) rng = new CardCombat.SeededRandom(mapSeed != 0 ? mapSeed : 1);
+        return rng.Next(1000000) / 1000000f;
+    }
+
     private void Awake()
     {
-        // µ¥ÀıÄ£Ê½
+        // å•ä¾‹æ¨¡å¼
         if (Instance == null)
         {
             Instance = this;
@@ -37,10 +60,15 @@ public class MapManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+
+        // æ”¾åœ¨ Awakeï¼šä»»ä½• Start é‡Œçš„å­˜ç›˜éƒ½å‘ç”Ÿåœ¨è¿™ä¹‹åï¼Œå­˜æ¡£åœ°å›¾ä¸ä¼šå…ˆè¢«ç©ºåœ°å›¾ç›–æ‰
+        if (SaveSystem.TryApplyPendingMap(this)) restoredFromSave = true;
     }
 
     private void Start()
     {
+        if (restoredFromSave) return;
+
         if (generateOnStart)
         {
             GenerateNewMap();
@@ -48,37 +76,46 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Éú³ÉÒ»ÕÅÈ«ĞÂµÄËæ»úµØÍ¼
+    /// ç”Ÿæˆä¸€å¼ å…¨æ–°çš„éšæœºåœ°å›¾
     /// </summary>
     public void GenerateNewMap()
     {
-        // Çå¿Õ¾ÉÊı¾İ
+        GenerateNewMap(NewSeed());
+    }
+
+    /// <summary>æŒ‰æŒ‡å®šç§å­ç”Ÿæˆã€‚ç›¸åŒçš„ç§å­ = å®Œå…¨ç›¸åŒçš„åœ°å›¾ï¼ˆèŠ‚ç‚¹ç±»å‹ã€æ•°é‡ã€è¿çº¿éƒ½ä¸€æ ·ï¼‰ã€‚</summary>
+    public void GenerateNewMap(int seed)
+    {
+        mapSeed = seed != 0 ? seed : NewSeed();
+        rng = new CardCombat.SeededRandom(mapSeed);
+
+        // æ¸…ç©ºæ—§æ•°æ®
         allNodes.Clear();
         nodesByLayer.Clear();
         nextNodeId = 0;
 
         if (printDebugLog)
         {
-            Debug.Log("¡¾MapManager¡¿¿ªÊ¼Éú³ÉĞÂµØÍ¼...");
+            Debug.Log("ã€MapManagerã€‘å¼€å§‹ç”Ÿæˆæ–°åœ°å›¾ï¼Œç§å­ " + mapSeed + "...");
         }
 
-        // 1. ´Óµ×²ãµ½¶¥²ãÖğ²ãÉú³É½Úµã
+        // 1. ä»åº•å±‚åˆ°é¡¶å±‚é€å±‚ç”ŸæˆèŠ‚ç‚¹
         for (int layer = 0; layer < mapConfig.totalLayers; layer++)
         {
             GenerateLayer(layer);
         }
 
-        // 2. ½¨Á¢½ÚµãÖ®¼äµÄÁ¬½Ó¹ØÏµ
+        // 2. å»ºç«‹èŠ‚ç‚¹ä¹‹é—´çš„è¿æ¥å…³ç³»
         ConnectAllLayers();
-        // 3. ÉèÖÃ³õÊ¼¿Éµ½´ï½Úµã£¨µÚ0²ãËùÓĞ½Úµã£©
+        // 3. è®¾ç½®åˆå§‹å¯åˆ°è¾¾èŠ‚ç‚¹ï¼ˆç¬¬0å±‚æ‰€æœ‰èŠ‚ç‚¹ï¼‰
         foreach (MapNode node in nodesByLayer[0])
         {
             node.isAccessible = true;
         }
 
         // ==========================================
-        // ¡¾ĞÂÔö£ºÉÌµêÇ¿ÖÆ±£µ×»úÖÆ¡¿
-        // ±£Ö¤ÔÚµØÍ¼µÄµÚ 2 ²ã»òµÚ 3 ²ã£¨ÖĞ¶Î£©£¬±Ø¶¨ÓĞÒ»¸öÉÌµê£¡
+        // ã€æ–°å¢ï¼šå•†åº—å¼ºåˆ¶ä¿åº•æœºåˆ¶ã€‘
+        // ä¿è¯åœ¨åœ°å›¾çš„ç¬¬ 2 å±‚æˆ–ç¬¬ 3 å±‚ï¼ˆä¸­æ®µï¼‰ï¼Œå¿…å®šæœ‰ä¸€ä¸ªå•†åº—ï¼
         // ==========================================
         bool hasShop = false;
         foreach (var node in allNodes)
@@ -88,41 +125,41 @@ public class MapManager : MonoBehaviour
 
         if (!hasShop && mapConfig.totalLayers > 3)
         {
-            // Ëæ»úÕÒµÚ 3 ²ãµÄÄ³Ò»¸ö½Úµã£¬Ç¿ÖÆ±ä³ÉÉÌµê£¡
+            // éšæœºæ‰¾ç¬¬ 3 å±‚çš„æŸä¸€ä¸ªèŠ‚ç‚¹ï¼Œå¼ºåˆ¶å˜æˆå•†åº—ï¼
             List<MapNode> middleLayerNodes = nodesByLayer[mapConfig.totalLayers / 2];
-            int randomNodeIndex = Random.Range(0, middleLayerNodes.Count);
+            int randomNodeIndex = Rand(0, middleLayerNodes.Count);
             middleLayerNodes[randomNodeIndex].nodeType = MapNodeType.Shop;
-            Debug.Log("¡¾±£µ×»úÖÆ´¥·¢¡¿Ç¿ÖÆÉú³ÉÁËÒ»¸öÉÌµê£¡");
+            Debug.Log("ã€ä¿åº•æœºåˆ¶è§¦å‘ã€‘å¼ºåˆ¶ç”Ÿæˆäº†ä¸€ä¸ªå•†åº—ï¼");
         }
         // ==========================================
 
         if (printDebugLog)
         {
-            Debug.Log($"¡¾MapManager¡¿µØÍ¼Éú³ÉÍê³É£¡×Ü½ÚµãÊı£º{allNodes.Count}");
+            Debug.Log($"ã€MapManagerã€‘åœ°å›¾ç”Ÿæˆå®Œæˆï¼æ€»èŠ‚ç‚¹æ•°ï¼š{allNodes.Count}");
             PrintMapDebugInfo();
         }
     }
 
     /// <summary>
-    /// Éú³ÉÖ¸¶¨²ãÊıµÄ½Úµã
+    /// ç”ŸæˆæŒ‡å®šå±‚æ•°çš„èŠ‚ç‚¹
     /// </summary>
     private void GenerateLayer(int layerIndex)
     {
         List<MapNode> layerNodes = new List<MapNode>();
         int nodeCount;
 
-        // ÌØÊâ´¦Àí£ºBoss²ãÖ»ÓĞ1¸ö½Úµã
+        // ç‰¹æ®Šå¤„ç†ï¼šBosså±‚åªæœ‰1ä¸ªèŠ‚ç‚¹
         if (layerIndex == mapConfig.bossLayerIndex)
         {
             nodeCount = 1;
         }
         else
         {
-            // Ëæ»úÉú³É¸Ã²ã½ÚµãÊı
-            nodeCount = Random.Range(mapConfig.minNodesPerLayer, mapConfig.maxNodesPerLayer + 1);
+            // éšæœºç”Ÿæˆè¯¥å±‚èŠ‚ç‚¹æ•°
+            nodeCount = Rand(mapConfig.minNodesPerLayer, mapConfig.maxNodesPerLayer + 1);
         }
 
-        // ¼ÆËã½ÚµãÔÚÆÁÄ»ÉÏµÄË®Æ½Î»ÖÃ
+        // è®¡ç®—èŠ‚ç‚¹åœ¨å±å¹•ä¸Šçš„æ°´å¹³ä½ç½®
         float totalWidth = (nodeCount - 1) * mapConfig.nodeHorizontalSpacing;
         float startX = -totalWidth / 2f;
 
@@ -135,12 +172,12 @@ public class MapManager : MonoBehaviour
             node.isAccessible = false;
             node.connectedNodeIds = new int[0];
 
-            // ÉèÖÃ½ÚµãÎ»ÖÃ£¨¾ÓÖĞ¶ÔÆë£©
+            // è®¾ç½®èŠ‚ç‚¹ä½ç½®ï¼ˆå±…ä¸­å¯¹é½ï¼‰
             float x = startX + i * mapConfig.nodeHorizontalSpacing;
             float y = layerIndex * mapConfig.layerVerticalSpacing;
             node.position = new Vector2(x, y);
 
-            // ·ÖÅä½ÚµãÀàĞÍ
+            // åˆ†é…èŠ‚ç‚¹ç±»å‹
             node.nodeType = GetRandomNodeType(layerIndex);
 
             layerNodes.Add(node);
@@ -151,17 +188,24 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸ù¾İ²ãÊıºÍ¸ÅÂÊ»ñÈ¡Ëæ»ú½ÚµãÀàĞÍ
+    /// æ ¹æ®å±‚æ•°å’Œæ¦‚ç‡è·å–éšæœºèŠ‚ç‚¹ç±»å‹
     /// </summary>
     private MapNodeType GetRandomNodeType(int layerIndex)
     {
-        // Boss²ã¹Ì¶¨ÎªBoss
+        // ç¬¬ä¸€å±‚æ°¸è¿œæ˜¯æˆ˜æ–—ï¼šå¼€å±€ç¬¬ä¸€æ ¼å¦‚æœæ˜¯äº‹ä»¶/å•†åº—ï¼Œç©å®¶è¿˜æ²¡æ‰“è¿‡ä¸€åœºå°±å…ˆåšå†³å®šï¼Œ
+        // è€Œè¿™æ—¶ä»–èº«ä¸Šæ²¡æœ‰èµ„æºã€ä¹Ÿæ²¡æœ‰å¯¹æ—¶é—´è½´çš„æ‰‹æ„Ÿ â€”â€” å†³ç­–ä¼šå˜æˆçº¯çœ‹æ–‡æ¡ˆã€‚
+        if (layerIndex == 0)
+        {
+            return MapNodeType.Normal;
+        }
+
+        // Bosså±‚å›ºå®šä¸ºBoss
         if (layerIndex == mapConfig.bossLayerIndex)
         {
             return MapNodeType.Boss;
         }
 
-        // Ç¿ÖÆóô»ğ²ã¹Ì¶¨Îªóô»ğ
+        // å¼ºåˆ¶ç¯ç«å±‚å›ºå®šä¸ºç¯ç«
         foreach (int campfireLayer in mapConfig.campfireLayerIndices)
         {
             if (layerIndex == campfireLayer)
@@ -170,8 +214,8 @@ public class MapManager : MonoBehaviour
             }
         }
 
-        // Ëæ»úÉú³ÉÆäËûÀàĞÍ
-        float roll = Random.value;
+        // éšæœºç”Ÿæˆå…¶ä»–ç±»å‹
+        float roll = RandValue();
         if (roll < mapConfig.normalNodeChance)
         {
             return MapNodeType.Normal;
@@ -184,6 +228,13 @@ public class MapManager : MonoBehaviour
         {
             return MapNodeType.Campfire;
         }
+        else if (roll < mapConfig.normalNodeChance + mapConfig.eliteNodeChance
+                 + mapConfig.campfireNodeChance + mapConfig.eventNodeChance)
+        {
+            // äº‹ä»¶æ ¼æ’åœ¨å•†åº—å‰é¢ï¼šå•†åº—æœ‰"å…¨å›¾ä¿åº•ä¸€ä¸ª"ï¼Œäº‹ä»¶æ²¡æœ‰ï¼Œ
+            // æ‰€ä»¥è®©äº‹ä»¶å…ˆåƒæ‰æ¦‚ç‡ï¼Œå•†åº—é ä¿åº•è¡¥ä¸Šã€‚
+            return MapNodeType.Event;
+        }
         else
         {
             return MapNodeType.Shop;
@@ -191,7 +242,7 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Á¬½ÓËùÓĞÏàÁÚ²ãµÄ½Úµã
+    /// è¿æ¥æ‰€æœ‰ç›¸é‚»å±‚çš„èŠ‚ç‚¹
     /// </summary>
     private void ConnectAllLayers()
     {
@@ -202,23 +253,23 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// Á¬½ÓÁ½²ã½Úµã£¬±£Ö¤100%Á¬Í¨ĞÔ
+    /// è¿æ¥ä¸¤å±‚èŠ‚ç‚¹ï¼Œä¿è¯100%è¿é€šæ€§
     /// </summary>
     private void ConnectTwoLayers(int lowerLayer, int upperLayer)
     {
         List<MapNode> lowerNodes = nodesByLayer[lowerLayer];
         List<MapNode> upperNodes = nodesByLayer[upperLayer];
 
-        // ÎªÃ¿¸öÏÂ²ã½ÚµãËæ»úÁ¬½Ó1-2¸öÉÏ²ã½Úµã
+        // ä¸ºæ¯ä¸ªä¸‹å±‚èŠ‚ç‚¹éšæœºè¿æ¥1-2ä¸ªä¸Šå±‚èŠ‚ç‚¹
         foreach (MapNode lowerNode in lowerNodes)
         {
-            int connectionCount = Random.Range(1, Mathf.Min(2, upperNodes.Count) + 1);
+            int connectionCount = Rand(1, Mathf.Min(2, upperNodes.Count) + 1);
             List<int> connectedIds = new List<int>();
 
-            // Ëæ»úÑ¡Ôñ²»ÖØ¸´µÄÉÏ²ã½Úµã
+            // éšæœºé€‰æ‹©ä¸é‡å¤çš„ä¸Šå±‚èŠ‚ç‚¹
             while (connectedIds.Count < connectionCount)
             {
-                int randomIndex = Random.Range(0, upperNodes.Count);
+                int randomIndex = Rand(0, upperNodes.Count);
                 int upperNodeId = upperNodes[randomIndex].nodeId;
 
                 if (!connectedIds.Contains(upperNodeId))
@@ -230,7 +281,7 @@ public class MapManager : MonoBehaviour
             lowerNode.connectedNodeIds = connectedIds.ToArray();
         }
 
-        // È·±£ËùÓĞÉÏ²ã½ÚµãÖÁÉÙÓĞÒ»¸öÁ¬½Ó£¨·ÀÖ¹³öÏÖ¹ÂÁ¢½Úµã£©
+        // ç¡®ä¿æ‰€æœ‰ä¸Šå±‚èŠ‚ç‚¹è‡³å°‘æœ‰ä¸€ä¸ªè¿æ¥ï¼ˆé˜²æ­¢å‡ºç°å­¤ç«‹èŠ‚ç‚¹ï¼‰
         foreach (MapNode upperNode in upperNodes)
         {
             bool hasConnection = false;
@@ -243,10 +294,10 @@ public class MapManager : MonoBehaviour
                 }
             }
 
-            // Èç¹ûÃ»ÓĞÁ¬½Ó£¬Ëæ»úÕÒÒ»¸öÏÂ²ã½ÚµãÁ¬½ÓËü
+            // å¦‚æœæ²¡æœ‰è¿æ¥ï¼Œéšæœºæ‰¾ä¸€ä¸ªä¸‹å±‚èŠ‚ç‚¹è¿æ¥å®ƒ
             if (!hasConnection)
             {
-                MapNode randomLowerNode = lowerNodes[Random.Range(0, lowerNodes.Count)];
+                MapNode randomLowerNode = lowerNodes[Rand(0, lowerNodes.Count)];
                 List<int> newConnections = new List<int>(randomLowerNode.connectedNodeIds);
                 newConnections.Add(upperNode.nodeId);
                 randomLowerNode.connectedNodeIds = newConnections.ToArray();
@@ -255,7 +306,7 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ¸ù¾İ½ÚµãID»ñÈ¡½ÚµãÊı¾İ
+    /// æ ¹æ®èŠ‚ç‚¹IDè·å–èŠ‚ç‚¹æ•°æ®
     /// </summary>
     public MapNode GetNodeById(int nodeId)
     {
@@ -263,7 +314,7 @@ public class MapManager : MonoBehaviour
     }
 
     /// <summary>
-    /// »ñÈ¡Ö¸¶¨²ãÊıµÄËùÓĞ½Úµã
+    /// è·å–æŒ‡å®šå±‚æ•°çš„æ‰€æœ‰èŠ‚ç‚¹
     /// </summary>
     public List<MapNode> GetNodesByLayer(int layerIndex)
     {
@@ -274,15 +325,86 @@ public class MapManager : MonoBehaviour
         return new List<MapNode>();
     }
 
+    // ---------------- å­˜æ¡£ç”¨ ----------------
+
+    /// <summary>æ¯æ¬¡æ–°å¼€å±€æ¢ä¸€ä¸ªç§å­ã€‚0 ä¼šè¢« SeededRandom å½“æˆå›ºå®šå€¼ï¼Œæ‰€ä»¥æ˜¾å¼é¿å¼€ã€‚</summary>
+    public static int NewSeed()
+    {
+        int s = (int)(System.DateTime.Now.Ticks & 0x7FFFFFFF) ^ (int)(System.Environment.TickCount * 2654435761u);
+        return s == 0 ? 12345 : s;
+    }
+
+    /// <summary>æŠŠæ•´å¼ åœ°å›¾å‹æˆå¯åºåˆ—åŒ–çš„æ‰å¹³ç»“æ„ï¼Œå­˜æ¡£ç”¨ã€‚</summary>
+    public List<SavedNode> ExportNodes()
+    {
+        List<SavedNode> list = new List<SavedNode>(allNodes.Count);
+        for (int i = 0; i < allNodes.Count; i++)
+        {
+            MapNode n = allNodes[i];
+            SavedNode s = new SavedNode();
+            s.id = n.nodeId;
+            s.layer = n.layerIndex;
+            s.type = (int)n.nodeType;
+            s.x = n.position.x;
+            s.y = n.position.y;
+            s.visited = n.isVisited;
+            s.accessible = n.isAccessible;
+            s.links = n.connectedNodeIds;
+            list.Add(s);
+        }
+        return list;
+    }
+
+    /// <summary>è¯»æ¡£ï¼šæŠŠèŠ‚ç‚¹çŠ¶æ€åŸæ ·é“ºå›å»ï¼ˆè¿çº¿ã€èµ°è¿‡çš„ã€å¯èµ°çš„å…¨ä¿ç•™ï¼‰ã€‚</summary>
+    public void RestoreNodes(List<SavedNode> list)
+    {
+        allNodes.Clear();
+        nodesByLayer.Clear();
+        nextNodeId = 0;
+        if (list == null) return;
+
+        for (int i = 0; i < list.Count; i++)
+        {
+            SavedNode s = list[i];
+            if (s == null) continue;
+
+            MapNode n = new MapNode();
+            n.nodeId = s.id;
+            n.layerIndex = s.layer;
+            n.nodeType = (MapNodeType)s.type;
+            n.position = new Vector2(s.x, s.y);
+            n.isVisited = s.visited;
+            n.isAccessible = s.accessible;
+            n.connectedNodeIds = s.links != null ? s.links : new int[0];
+
+            allNodes.Add(n);
+
+            List<MapNode> layerNodes;
+            if (!nodesByLayer.TryGetValue(n.layerIndex, out layerNodes))
+            {
+                layerNodes = new List<MapNode>();
+                nodesByLayer.Add(n.layerIndex, layerNodes);
+            }
+            layerNodes.Add(n);
+
+            if (n.nodeId >= nextNodeId) nextNodeId = n.nodeId + 1;
+        }
+
+        if (printDebugLog)
+        {
+            Debug.Log("ã€MapManagerã€‘å·²è¿˜åŸå­˜æ¡£åœ°å›¾ï¼šèŠ‚ç‚¹ " + allNodes.Count + " ä¸ªï¼Œç§å­ " + mapSeed);
+        }
+    }
+
     /// <summary>
-    /// ´òÓ¡µØÍ¼µ÷ÊÔĞÅÏ¢
+    /// æ‰“å°åœ°å›¾è°ƒè¯•ä¿¡æ¯
     /// </summary>
     private void PrintMapDebugInfo()
     {
         for (int layer = 0; layer < mapConfig.totalLayers; layer++)
         {
             List<MapNode> nodes = GetNodesByLayer(layer);
-            string layerInfo = $"µÚ{layer}²ã: ";
+            string layerInfo = $"ç¬¬{layer}å±‚: ";
 
             foreach (MapNode node in nodes)
             {

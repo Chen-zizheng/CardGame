@@ -5,7 +5,7 @@ public class EndingController : MonoBehaviour
 {
     public void BackToMainMenu()
     {
-        Debug.Log("´Ó EndingScene ·µ»Ø MainMenu");
+        Debug.Log("ä»Ž EndingScene è¿”å›ž MainMenu");
         SceneManager.LoadScene("MainMenu");
     }
 }

@@ -1,28 +1,31 @@
 using UnityEngine;
 
 /// <summary>
-/// µØÍ¼½ÚµãÀàĞÍÃ¶¾Ù
+/// åœ°å›¾èŠ‚ç‚¹ç±»å‹æšä¸¾
 /// </summary>
 public enum MapNodeType
 {
-    Normal,     // ÆÕÍ¨¹Ö
-    Elite,      // ¾«Ó¢¹Ö
-    Campfire,   // óô»ğ
-    Shop,       // ÉÌµê
-    Boss        // Boss
+    Normal,     // æ™®é€šæ€ª
+    Elite,      // ç²¾è‹±æ€ª
+    Campfire,   // ç¯ç«
+    Shop,       // å•†åº—
+    Boss,       // Boss
+    Event       // äº‹ä»¶ï¼ˆ? æ ¼ï¼‰ï¼šä¸€æ®µè¯ + ä¸€ä¸ªé€‰æ‹©ï¼Œä¸æ‰“æ¶
+                // æ³¨æ„ï¼šæ–°ç±»å‹åªèƒ½å¾€åé¢åŠ ã€‚å­˜æ¡£é‡Œ nodeType å­˜çš„æ˜¯ intï¼Œ
+                // æ’åœ¨ä¸­é—´ä¼šè®©è€æ¡£é‡Œçš„ Boss å˜å›å•†åº—ã€‚
 }
 
 /// <summary>
-/// µ¥¸öµØÍ¼½ÚµãµÄÊı¾İ½á¹¹
+/// å•ä¸ªåœ°å›¾èŠ‚ç‚¹çš„æ•°æ®ç»“æ„
 /// </summary>
 [System.Serializable]
 public class MapNode
 {
-    public int nodeId;               // ½ÚµãÎ¨Ò»ID
-    public int layerIndex;           // ËùÔÚ²ãÊı£¨´Ó0¿ªÊ¼£¬×îµ×²ãÊÇµÚ0²ã£©
-    public MapNodeType nodeType;     // ½ÚµãÀàĞÍ
-    public Vector2 position;         // UI×ø±ê
-    public bool isVisited;           // ÊÇ·ñÒÑ·ÃÎÊ¹ı
-    public bool isAccessible;        // µ±Ç°ÊÇ·ñ¿Éµ½´ï
-    public int[] connectedNodeIds;   // Á¬½ÓµÄÉÏ²ã½ÚµãIDÊı×é
+    public int nodeId;               // èŠ‚ç‚¹å”¯ä¸€ID
+    public int layerIndex;           // æ‰€åœ¨å±‚æ•°ï¼ˆä»0å¼€å§‹ï¼Œæœ€åº•å±‚æ˜¯ç¬¬0å±‚ï¼‰
+    public MapNodeType nodeType;     // èŠ‚ç‚¹ç±»å‹
+    public Vector2 position;         // UIåæ ‡
+    public bool isVisited;           // æ˜¯å¦å·²è®¿é—®è¿‡
+    public bool isAccessible;        // å½“å‰æ˜¯å¦å¯åˆ°è¾¾
+    public int[] connectedNodeIds;   // è¿æ¥çš„ä¸Šå±‚èŠ‚ç‚¹IDæ•°ç»„
 }

@@ -2,14 +2,14 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-// °´Å¥ĞüÍ£Ëõ·Å½Å±¾£¬ÍÏµ½°´Å¥ÉÏ¾ÍÄÜÖ±½ÓÓÃ£¬ÎŞĞè¶îÍâÉèÖÃ
+// æŒ‰é’®æ‚¬åœç¼©æ”¾è„šæœ¬ï¼Œæ‹–åˆ°æŒ‰é’®ä¸Šå°±èƒ½ç›´æ¥ç”¨ï¼Œæ— éœ€é¢å¤–è®¾ç½®
 [RequireComponent(typeof(Button))]
 public class ButtonScaleHover : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IPointerDownHandler, IPointerUpHandler
 {
-    [Header("Ëõ·ÅÉèÖÃ")]
-    [Tooltip("ĞüÍ£Ê±µÄ·Å´ó±¶Êı£¬1.1=·Å´ó10%")] public float hoverScale = 1.1f;
-    [Tooltip("°´ÏÂÊ±µÄËõĞ¡±¶Êı")] public float pressedScale = 0.95f;
-    [Tooltip("¶¯»­ËÙ¶È£¬ÊıÖµÔ½´ó¶¯»­Ô½¿ì")] public float animSpeed = 10f;
+    [Header("ç¼©æ”¾è®¾ç½®")]
+    [Tooltip("æ‚¬åœæ—¶çš„æ”¾å¤§å€æ•°ï¼Œ1.1=æ”¾å¤§10%")] public float hoverScale = 1.1f;
+    [Tooltip("æŒ‰ä¸‹æ—¶çš„ç¼©å°å€æ•°")] public float pressedScale = 0.95f;
+    [Tooltip("åŠ¨ç”»é€Ÿåº¦ï¼Œæ•°å€¼è¶Šå¤§åŠ¨ç”»è¶Šå¿«")] public float animSpeed = 10f;
 
     private RectTransform rectTrans;
     private Vector3 originalScale;
@@ -18,38 +18,38 @@ public class ButtonScaleHover : MonoBehaviour, IPointerEnterHandler, IPointerExi
     void Awake()
     {
         rectTrans = GetComponent<RectTransform>();
-        originalScale = rectTrans.localScale; // ¼ÇÂ¼°´Å¥Ô­±¾µÄ´óĞ¡
+        originalScale = rectTrans.localScale; // è®°å½•æŒ‰é’®åŸæœ¬çš„å¤§å°
         targetScale = originalScale;
     }
 
     void Update()
     {
-        // Æ½»¬Ëõ·Å¹ı¶É£¬²»»áÉúÓ²¿¨¶Ù
+        // å¹³æ»‘ç¼©æ”¾è¿‡æ¸¡ï¼Œä¸ä¼šç”Ÿç¡¬å¡é¡¿
         rectTrans.localScale = Vector3.Lerp(rectTrans.localScale, targetScale, Time.deltaTime * animSpeed);
     }
 
-    // Êó±ê½øÈë°´Å¥£¨ĞüÍ££©
+    // é¼ æ ‡è¿›å…¥æŒ‰é’®ï¼ˆæ‚¬åœï¼‰
     public void OnPointerEnter(PointerEventData eventData)
     {
         targetScale = originalScale * hoverScale;
     }
 
-    // Êó±êÀë¿ª°´Å¥
+    // é¼ æ ‡ç¦»å¼€æŒ‰é’®
     public void OnPointerExit(PointerEventData eventData)
     {
         targetScale = originalScale;
     }
 
-    // Êó±ê°´ÏÂ°´Å¥
+    // é¼ æ ‡æŒ‰ä¸‹æŒ‰é’®
     public void OnPointerDown(PointerEventData eventData)
     {
         targetScale = originalScale * pressedScale;
     }
 
-    // Êó±êËÉ¿ª°´Å¥
+    // é¼ æ ‡æ¾å¼€æŒ‰é’®
     public void OnPointerUp(PointerEventData eventData)
     {
-        // ËÉ¿ªºó£¬Êó±ê»¹ÔÚ°´Å¥ÉÏ¾Í»Øµ½ĞüÍ£´óĞ¡£¬·ñÔò»Ö¸´Ô­´óĞ¡
+        // æ¾å¼€åï¼Œé¼ æ ‡è¿˜åœ¨æŒ‰é’®ä¸Šå°±å›åˆ°æ‚¬åœå¤§å°ï¼Œå¦åˆ™æ¢å¤åŸå¤§å°
         targetScale = eventData.hovered.Contains(gameObject) ? originalScale * hoverScale : originalScale;
     }
 }

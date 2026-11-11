@@ -12,11 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8514d0876ee5adf44890b7fdd5daead1, type: 3}
   m_Name: RangerData
   m_EditorClassIdentifier: 
-  characterName: "\u6E38\u4FA0"
+  characterName: "\u89E3\u5256\u5E08"
   characterSprite: {fileID: 21300000, guid: ec11bfbe86c5687469b4b93c67f4a7f6, type: 3}
   battleSprite: {fileID: 21300000, guid: 30a92da601f739b43a1cd2172b16266a, type: 3}
-  maxHp: 40
+  maxHp: 65
   passiveSkill: 1
+  passiveName: "\u8282\u594F\u56DE\u6536"
+  passiveDesc: "\u6253\u51FA\u53EA\u5360 1 \u683C\u3001\u4E14\u6D88\u8017\u7075\u80FD\u7684\u724C\uFF0C\u7ACB\u523B\u56DE 1 \u70B9\u7075\u80FD\uFF1B\u6BCF\u6253\u51FA 2 \u5F20\u724C\uFF0C\u56DE 3 \u70B9\u751F\u547D\u3002"
+  tagline: "\u788E\u724C \u00B7 \u591A\u6BB5 \u00B7 \u62BD\u724C"
   initialDeck:
   - cardName: "\u666E\u901A\u653B\u51FB"
     damage: 4

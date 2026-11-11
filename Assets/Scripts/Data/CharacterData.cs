@@ -1,29 +1,35 @@
 using UnityEngine;
 using System.Collections.Generic;
 
-// ¶¨Òå±»¶¯¼¼ÄÜµÄÀàĞÍ
+// å®šä¹‰è¢«åŠ¨æŠ€èƒ½çš„ç±»å‹ã€‚æ³¨æ„ï¼š.asset é‡Œå­˜çš„æ˜¯ intï¼ˆ0/1ï¼‰ï¼Œæ‰€ä»¥åªèƒ½å¾€åè¿½åŠ ï¼Œä¸èƒ½æ”¹é¡ºåºã€‚
 public enum PassiveSkillType
 {
-    Warrior_BloodHeal,   // Õ½Ê¿£ºÕ½ºó°´ÒÑËğÊ§±ÈÀı»ØÑª
-    Ranger_LastCardDraw  // ÓÎÏÀ£º×îºóÒ»ÕÅÅÆ³éÅÆ
+    Sweeper_GuardHeal = 0, // æ¸…é“å¤«ï¼šæ ¼æŒ¡çœŸçš„æŒ¡ä¸‹ä¼¤å®³æ—¶å› 2 è¡€ï¼Œæˆ˜åæŒ‰å·²æŸå¤±è¡€é‡å› 30%
+    Dissector_Tempo = 1    // è§£å‰–å¸ˆï¼šæ‰“å‡ºå  1 æ ¼ã€ä¸”èŠ±çµèƒ½çš„ç‰Œï¼Œç«‹åˆ»å› 1 ç‚¹çµèƒ½
 }
 
 [CreateAssetMenu(fileName = "NewCharacter", menuName = "GameData/CharacterData")]
 public class CharacterData : ScriptableObject
 {
-    [Header("½ÇÉ«»ù´¡ĞÅÏ¢")]
-    public string characterName;      // ½ÇÉ«Ãû×Ö
-    public Sprite characterSprite;    // ½ÇÉ«Á¢»æ/Í·Ïñ£¨Ñ¡ÈË½çÃæÓÃ£©
+    [Header("è§’è‰²åŸºç¡€ä¿¡æ¯")]
+    public string characterName;      // è§’è‰²åå­—
+    public Sprite characterSprite;    // è§’è‰²ç«‹ç»˜/å¤´åƒï¼ˆé€‰äººç•Œé¢ç”¨ï¼‰
 
-    [Header("Õ½¶·×¨Êô")]
-    public Sprite battleSprite;       // ¡¾ĞÂÔö¡¿Õ½¶·ÀïÓÃµÄQ°æĞ¡ÈËÁ¢»æ£¡
+    [Header("æˆ˜æ–—ä¸“å±")]
+    public Sprite battleSprite;       // ã€æ–°å¢ã€‘æˆ˜æ–—é‡Œç”¨çš„Qç‰ˆå°äººç«‹ç»˜ï¼
 
-    public int maxHp;                 // ×î´óÑªÁ¿
+    public int maxHp;                 // æœ€å¤§è¡€é‡
 
-    [Header("×¨Êô±»¶¯¼¼ÄÜ")]
-    public PassiveSkillType passiveSkill; // ÏÂÀ­²Ëµ¥Ñ¡¼¼ÄÜ
+    [Header("ä¸“å±è¢«åŠ¨æŠ€èƒ½")]
+    public PassiveSkillType passiveSkill; // ä¸‹æ‹‰èœå•é€‰æŠ€èƒ½
 
-    [Header("¿¨×éÅäÖÃ")]
-    public List<CardData> initialDeck = new List<CardData>();       // ³õÊ¼ÅÆ¿â£¨×Ô´øµÄÅÆ£©
-    public List<CardData> exclusiveCardPool = new List<CardData>(); // ×¨ÊôÕ½ÀûÆ·¿¨³Ø£¨´òÓ®µôÂäµÄÅÆ£©
+    [Header("ç»™ç©å®¶çœ‹çš„è¯´æ˜ï¼ˆé€‰äººç•Œé¢ç›´æ¥è¯»è¿™ä¸‰ä¸ªå­—æ®µï¼‰")]
+    [Tooltip("è¢«åŠ¨åå­—ï¼Œä¾‹å¦‚ã€Œæ ¼æŒ¡å›è¡€ã€")] public string passiveName;
+    [TextArea(2, 4)]
+    [Tooltip("ä¸€å¥è¯è¯´æ¸…è¢«åŠ¨ä»€ä¹ˆæ—¶å€™ç”Ÿæ•ˆã€ç”Ÿæ•ˆå¤šå°‘")] public string passiveDesc;
+    [Tooltip("è¿™ä¸ªè§’è‰²æ€ä¹ˆæ‰“ï¼Œç”¨æ¥åŒºåˆ†ä¸¤ä¸ªèŒä¸šçš„æ‰‹æ„Ÿ")] public string tagline;
+
+    [Header("å¡ç»„é…ç½®")]
+    public List<CardData> initialDeck = new List<CardData>();       // åˆå§‹ç‰Œåº“ï¼ˆè‡ªå¸¦çš„ç‰Œï¼‰
+    public List<CardData> exclusiveCardPool = new List<CardData>(); // ä¸“å±æˆ˜åˆ©å“å¡æ± ï¼ˆæ‰“èµ¢æ‰è½çš„ç‰Œï¼‰
 }

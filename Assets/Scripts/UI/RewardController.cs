@@ -6,12 +6,12 @@ using UnityEngine.SceneManagement;
 
 public class RewardController : MonoBehaviour
 {
-    [Header("UI ÒıÓÃ")]
-    [Tooltip("¿¨ÅÆÉú³ÉµÄ¸¸½Úµã (¹ÒÔØÁË GridLayoutGroup »ò HorizontalLayoutGroup)")]
+    [Header("UI å¼•ç”¨")]
+    [Tooltip("å¡ç‰Œç”Ÿæˆçš„çˆ¶èŠ‚ç‚¹ (æŒ‚è½½äº† GridLayoutGroup æˆ– HorizontalLayoutGroup)")]
     public Transform cardGridParent;
-    [Tooltip("ÄãµÄ Card Ô¤ÖÆÌå")]
+    [Tooltip("ä½ çš„ Card é¢„åˆ¶ä½“")]
     public GameObject cardViewPrefab;
-    [Tooltip("Ìø¹ı°´Å¥ (²»Ñ¡ÅÆÖ±½Ó×ß)")]
+    [Tooltip("è·³è¿‡æŒ‰é’® (ä¸é€‰ç‰Œç›´æ¥èµ°)")]
     public Button skipButton;
 
     private List<GameObject> spawnedCards = new List<GameObject>();
@@ -20,34 +20,45 @@ public class RewardController : MonoBehaviour
     {
         if (skipButton != null)
         {
+            skipButton.onClick.RemoveAllListeners();
             skipButton.onClick.AddListener(ReturnToMap);
         }
 
+        // ç‰ˆå¼äº¤ç»™ ScreenLayoutï¼šæ ‡é¢˜ / å‰¯æ ‡é¢˜ / ä¸€æ’å¡ / è·³è¿‡
+        ScreenLayout.ApplyReward(Object.FindObjectOfType<Canvas>(), cardGridParent, skipButton);
+
         GenerateRewards();
+
+        // å¡æ˜¯åˆš Instantiate å‡ºæ¥çš„ï¼Œæ‘†ä½å¿…é¡»ç­‰ç”Ÿæˆå®Œå†åš
+        ScreenLayout.PlaceCards(cardGridParent, spawnedCards.Count, 0f);
+        for (int i = 0; i < spawnedCards.Count; i++)
+        {
+            ScreenLayout.AddCaption(spawnedCards[i], "å–èµ°", UiSkin.Mint);
+        }
     }
 
     private void GenerateRewards()
     {
         if (GameManager.Instance == null || GameManager.Instance.allAvailableCards.Count == 0)
         {
-            Debug.LogError("¡¾RewardController¡¿GameManagerÎª¿Õ£¬»òÕß×Ü¿¨³Ø(allAvailableCards)ÀïÃ»ÓĞÅäÖÃÈÎºÎ¿¨ÅÆ£¡");
+            Debug.LogError("ã€RewardControllerã€‘GameManagerä¸ºç©ºï¼Œæˆ–è€…æ€»å¡æ± (allAvailableCards)é‡Œæ²¡æœ‰é…ç½®ä»»ä½•å¡ç‰Œï¼");
             return;
         }
 
-        // 1. ´Ó×Ü¿¨³ØÖĞ¿½±´Ò»·İÁÙÊ±ÁĞ±í£¬ÓÃÓÚËæ»ú³éÈ¡
+        // 1. ä»æ€»å¡æ± ä¸­æ‹·è´ä¸€ä»½ä¸´æ—¶åˆ—è¡¨ï¼Œç”¨äºéšæœºæŠ½å–
         List<CardData> pool = new List<CardData>(GameManager.Instance.allAvailableCards);
         List<CardData> selectedCards = new List<CardData>();
 
-        // 2. Ëæ»ú³éÈ¡3ÕÅ£¨Èç¹û²»Âú3ÕÅ¾ÍÓĞ¶àÉÙ³é¶àÉÙ£©
+        // 2. éšæœºæŠ½å–3å¼ ï¼ˆå¦‚æœä¸æ»¡3å¼ å°±æœ‰å¤šå°‘æŠ½å¤šå°‘ï¼‰
         int drawCount = Mathf.Min(3, pool.Count);
         for (int i = 0; i < drawCount; i++)
         {
             int randomIndex = Random.Range(0, pool.Count);
             selectedCards.Add(pool[randomIndex]);
-            pool.RemoveAt(randomIndex); // ³é×ßºóÌŞ³ı£¬±£Ö¤³öÀ´µÄ3ÕÅÅÆ²»ÖØ¸´
+            pool.RemoveAt(randomIndex); // æŠ½èµ°åå‰”é™¤ï¼Œä¿è¯å‡ºæ¥çš„3å¼ ç‰Œä¸é‡å¤
         }
 
-        // 3. Éú³ÉUIÊµÌå
+        // 3. ç”ŸæˆUIå®ä½“
         foreach (CardData cardData in selectedCards)
         {
             GameObject cardObj = Instantiate(cardViewPrefab, cardGridParent);
@@ -56,9 +67,9 @@ public class RewardController : MonoBehaviour
             if (cardView != null)
             {
                 cardView.SetCardData(cardData);
-                cardView.SetCardInteractable(true); // ±£Ö¤¿¨ÅÆ¿ÉÒÔ±»µã»÷
+                cardView.SetCardInteractable(true); // ä¿è¯å¡ç‰Œå¯ä»¥è¢«ç‚¹å‡»
 
-                // °ó¶¨µã»÷ÊÂ¼ş£ºµã»÷ÕâÕÅ¿¨£¬¾Í°ÑËü¼ÓÈëÅÆ¿â£¬²¢·µ»ØµØÍ¼
+                // ç»‘å®šç‚¹å‡»äº‹ä»¶ï¼šç‚¹å‡»è¿™å¼ å¡ï¼Œå°±æŠŠå®ƒåŠ å…¥ç‰Œåº“ï¼Œå¹¶è¿”å›åœ°å›¾
                 cardView.cardButton.onClick.RemoveAllListeners();
                 cardView.cardButton.onClick.AddListener(() => OnCardSelected(cardData));
             }
@@ -77,8 +88,9 @@ public class RewardController : MonoBehaviour
 
     private void ReturnToMap()
     {
-        // ÄÃÍê½±Àø£¬Ö±½Ó·µ»Ø´óµØÍ¼³¡¾°¼ÌĞøÑ¡¹Ø
-        Debug.Log("½±Àø½áËãÍê±Ï£¬·µ»ØµØÍ¼...");
-        SceneManager.LoadScene("MapScene"); // ÌîÄãÊµ¼ÊµÄµØÍ¼³¡¾°Ãû×Ö
+        // æ‹¿å®Œå¥–åŠ±ï¼Œç›´æ¥è¿”å›å¤§åœ°å›¾åœºæ™¯ç»§ç»­é€‰å…³
+        Debug.Log("å¥–åŠ±ç»“ç®—å®Œæ¯•ï¼Œè¿”å›åœ°å›¾...");
+        SaveSystem.Save();
+        SceneManager.LoadScene("MapScene"); // å¡«ä½ å®é™…çš„åœ°å›¾åœºæ™¯åå­—
     }
 }

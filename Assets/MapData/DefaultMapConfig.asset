@@ -12,14 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d40efeead4d2fb34fbe5f3ed7d3f36d5, type: 3}
   m_Name: DefaultMapConfig
   m_EditorClassIdentifier: Assembly-CSharp::MapConfig
-  totalLayers: 7
+  totalLayers: 10
   minNodesPerLayer: 2
   maxNodesPerLayer: 4
   layerVerticalSpacing: 150
   nodeHorizontalSpacing: 200
-  normalNodeChance: 0.6
-  eliteNodeChance: 0.2
-  campfireNodeChance: 0.15
-  shopNodeChance: 0.05
-  bossLayerIndex: 6
-  campfireLayerIndices: 0200000005000000
+  normalNodeChance: 0.56
+  eliteNodeChance: 0.18
+  campfireNodeChance: 0.1
+  eventNodeChance: 0.1
+  shopNodeChance: 0.06
+  bossLayerIndex: 9
+  campfireLayerIndices: 020000000500000008000000

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using TMPro;
 using DG.Tweening;
@@ -6,46 +7,59 @@ public class DamagePopup : MonoBehaviour
 {
     private TextMeshProUGUI textMesh;
 
-    [Header("¶¯»­ÅäÖÃ")]
-    [Tooltip("ÏòÉÏÆ®¶¯µÄ¾àÀë")]
+    [Header("åŠ¨ç”»é…ç½®")]
+    [Tooltip("å‘ä¸Šé£˜åŠ¨çš„è·ç¦»")]
     public float floatHeight = 100f;
-    [Tooltip("¶¯»­³ÖĞøÊ±¼ä")]
+    [Tooltip("åŠ¨ç”»æŒç»­æ—¶é—´")]
     public float duration = 0.8f;
 
     /// <summary>
-    /// ³õÊ¼»¯Ìø×ÖµÄÊı¾İºÍ¶¯»­
+    /// åˆå§‹åŒ–è·³å­—çš„æ•°æ®å’ŒåŠ¨ç”»ã€‚onFinished ä¸ä¸ºç©ºæ—¶æŠŠå¯¹è±¡äº¤è¿˜ç»™è°ƒç”¨æ–¹ï¼ˆå¯¹è±¡æ± ï¼‰ï¼Œå¦åˆ™ç›´æ¥é”€æ¯ã€‚
     /// </summary>
-    /// <param name="amount">ÊıÖµ´óĞ¡</param>
-    /// <param name="color">ÎÄ×ÖÑÕÉ«</param>
-    /// <param name="isHeal">ÊÇ·ñÎªÖÎÁÆ£¨ÖÎÁÆÏÔÊ¾+ºÅ£¬ÉËº¦ÏÔÊ¾-ºÅ£©</param>
-    public void Setup(int amount, Color color, bool isHeal = false)
+    /// <param name="amount">æ•°å€¼å¤§å°</param>
+    /// <param name="color">æ–‡å­—é¢œè‰²</param>
+    /// <param name="isHeal">æ˜¯å¦ä¸ºæ²»ç–—ï¼ˆæ²»ç–—æ˜¾ç¤º+å·ï¼Œä¼¤å®³æ˜¾ç¤º-å·ï¼‰</param>
+    /// <param name="onFinished">åŠ¨ç”»æ’­å®Œçš„å›è°ƒï¼Œç”¨äºå›æ± </param>
+    public void Setup(int amount, Color color, bool isHeal = false, Action<DamagePopup> onFinished = null)
     {
-        textMesh = GetComponent<TextMeshProUGUI>();
+        if (textMesh == null) textMesh = GetComponent<TextMeshProUGUI>();
         if (textMesh == null)
         {
-            Debug.LogError("¡¾DamagePopup¡¿ÕÒ²»µ½ TextMeshProUGUI ×é¼ş£¡");
+            Debug.LogError("ã€DamagePopupã€‘æ‰¾ä¸åˆ° TextMeshProUGUI ç»„ä»¶ï¼");
             return;
         }
 
-        // ÉèÖÃÎÄ±¾ÄÚÈİºÍÑÕÉ«
+        gameObject.SetActive(true);
+
+        // æ± åŒ–å¤ç”¨ï¼šå…ˆæ€æ‰ä¸Šä¸€è½®çš„è¡¥é—´ï¼Œå¦åˆ™æ—§ Tween ä¼šå’Œæ–°çš„æŠ¢ä½ç½®/é€æ˜åº¦
+        transform.DOKill();
+        textMesh.DOKill();
+
         string prefix = isHeal ? "+" : "-";
-        textMesh.text = $"{prefix}{amount}";
+        textMesh.text = prefix + amount;
+
+        color.a = 1f;
         textMesh.color = color;
 
-        // ÉÔÎ¢¼ÓÒ»µãËæ»úµÄ³õÊ¼Î»ÖÃÆ«ÒÆ£¬±ÜÃâ¶à¸öÊı×Ö¼·ÔÚÍêÈ«ÏàÍ¬µÄÎ»ÖÃ
-        float randomX = Random.Range(-30f, 30f);
-        float randomY = Random.Range(-20f, 20f);
+        // ç¨å¾®åŠ ä¸€ç‚¹éšæœºçš„åˆå§‹åç§»ï¼Œé¿å…å¤šä¸ªæ•°å­—æŒ¤åœ¨å®Œå…¨ç›¸åŒçš„ä½ç½®
+        float randomX = UnityEngine.Random.Range(-30f, 30f);
+        float randomY = UnityEngine.Random.Range(-20f, 20f);
         transform.localPosition += new Vector3(randomX, randomY, 0);
 
-        // --- DoTween ¶¯»­ĞòÁĞ ---
-        // 1. ÏòÉÏÆ®¶¯ (LocalMoveY)
+        // 1. å‘ä¸Šé£˜åŠ¨
         transform.DOLocalMoveY(transform.localPosition.y + floatHeight, duration).SetEase(Ease.OutQuad);
 
-        // 2. Í¸Ã÷¶È½¥Òşµ½ 0 (Fade)
-        textMesh.DOFade(0, duration).SetEase(Ease.InQuad).OnComplete(() =>
+        // 2. é€æ˜åº¦æ¸éšåˆ° 0ï¼Œæ’­å®Œå›æ± ï¼ˆæ²¡æœ‰å›è°ƒæ‰é”€æ¯ï¼‰
+        textMesh.DOFade(0f, duration).SetEase(Ease.InQuad).OnComplete(() =>
         {
-            // ¶¯»­½áÊøºó£¬×Ô¶¯Ïú»ÙÕâ¸öÌø×Ö¶ÔÏó£¬ÊÍ·ÅÄÚ´æ
-            Destroy(gameObject);
+            if (onFinished != null)
+            {
+                onFinished(this);
+            }
+            else
+            {
+                Destroy(gameObject);
+            }
         });
     }
 }

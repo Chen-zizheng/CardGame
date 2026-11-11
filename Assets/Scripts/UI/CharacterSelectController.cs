@@ -3,47 +3,54 @@ using UnityEngine.SceneManagement;
 
 public class CharacterSelectController : MonoBehaviour
 {
-    [Header("°Ñ¸Õ²Å×öºÃµÄ½ÇÉ«Êı¾İÍÏµ½ÕâÀï")]
-    public CharacterData warriorData; // Õ½Ê¿Êı¾İ
-    public CharacterData rangerData;  // ÓÎÏÀÊı¾İ
+    [Header("æŠŠåˆšæ‰åšå¥½çš„è§’è‰²æ•°æ®æ‹–åˆ°è¿™é‡Œ")]
+    // æ³¨æ„ï¼šè¿™ä¸¤ä¸ªå­—æ®µåè¢«åœºæ™¯å¼•ç”¨ç€ï¼Œæ”¹åä¼šæ–­è¿çº¿ï¼Œæ‰€ä»¥å³ä½¿å« warrior/ranger ä¹Ÿä¸è¦åŠ¨ã€‚
+    public CharacterData warriorData; // æ¸…é“å¤«æ•°æ®
+    public CharacterData rangerData;  // è§£å‰–å¸ˆæ•°æ®
 
-    [Header("Ñ¡Íê½ÇÉ«ºóÈ¥ÄÄ¸ö³¡¾°£¿")]
-    public string nextSceneName = "MapScene"; // Ä¬ÈÏÈ¥´óµØÍ¼
+    [Header("é€‰å®Œè§’è‰²åå»å“ªä¸ªåœºæ™¯ï¼Ÿ")]
+    public string nextSceneName = "MapScene"; // é»˜è®¤å»å¤§åœ°å›¾
+
+    private void Start()
+    {
+        // ç‰ˆå¼å†™åœ¨ UiLayout.cs é‡Œï¼ˆåæ ‡ä»ä»£ç æ¥ï¼Œåœºæ™¯é‡Œé‚£å—ç°æ¿åªå½“æŒ‰é’®ç”¨ï¼‰
+        CharacterSelectLayout.Apply(warriorData, rangerData);
+    }
 
     /// <summary>
-    /// ¸ø¡°Ñ¡ÔñÕ½Ê¿¡±°´Å¥°ó¶¨µÄ·½·¨
+    /// ç»™â€œæ¸…é“å¤«â€æŒ‰é’®ç»‘å®šçš„æ–¹æ³•ï¼ˆæ–¹æ³•åè¢«åœºæ™¯çš„ onClick å¼•ç”¨ï¼Œä¸è¦æ”¹ï¼‰
     /// </summary>
     public void OnSelectWarrior()
     {
-        Debug.Log("Ñ¡ÔñÁË£ºÕ½Ê¿");
+        Debug.Log("é€‰æ‹©äº†ï¼š" + (warriorData != null ? warriorData.characterName : "æ¸…é“å¤«"));
         StartGameWithCharacter(warriorData);
     }
 
     /// <summary>
-    /// ¸ø¡°Ñ¡ÔñÓÎÏÀ¡±°´Å¥°ó¶¨µÄ·½·¨
+    /// ç»™â€œè§£å‰–å¸ˆâ€æŒ‰é’®ç»‘å®šçš„æ–¹æ³•ï¼ˆæ–¹æ³•åè¢«åœºæ™¯çš„ onClick å¼•ç”¨ï¼Œä¸è¦æ”¹ï¼‰
     /// </summary>
     public void OnSelectRanger()
     {
-        Debug.Log("Ñ¡ÔñÁË£ºÓÎÏÀ");
+        Debug.Log("é€‰æ‹©äº†ï¼š" + (rangerData != null ? rangerData.characterName : "è§£å‰–å¸ˆ"));
         StartGameWithCharacter(rangerData);
     }
 
     /// <summary>
-    /// ºËĞÄÍ¨ÓÃÂß¼­£º°ÑÊı¾İÈû¸øÈ«¾Ö¹Ü¼Ò£¬È»ºóÇĞ³¡¾°
+    /// æ ¸å¿ƒé€šç”¨é€»è¾‘ï¼šæŠŠæ•°æ®å¡ç»™å…¨å±€ç®¡å®¶ï¼Œç„¶ååˆ‡åœºæ™¯
     /// </summary>
     private void StartGameWithCharacter(CharacterData selectedData)
     {
         if (GameManager.Instance != null)
         {
-            // 1. ÈÃ GameManager ÍÌÏÂÕâ¸ö½ÇÉ«µÄËùÓĞ×¨ÊôÊı¾İ£¡
+            // 1. è®© GameManager åä¸‹è¿™ä¸ªè§’è‰²çš„æ‰€æœ‰ä¸“å±æ•°æ®ï¼
             GameManager.Instance.StartNewRun(selectedData);
 
-            // 2. ÇĞ³¡¾°£¡ÕıÊ½¿ªÊ¼Èâ¸ëÖ®ÂÃ£¡
+            // 2. åˆ‡åœºæ™¯ï¼æ­£å¼å¼€å§‹è‚‰é¸½ä¹‹æ—…ï¼
             SceneManager.LoadScene(nextSceneName);
         }
         else
         {
-            Debug.LogError("¡¾ÖÂÃü´íÎó¡¿ÕÒ²»µ½ GameManager£¡ÇëÎñ±Ø´Ó MainMenu ³¡¾°Æô¶¯ÓÎÏ·£¡");
+            Debug.LogError("ã€è‡´å‘½é”™è¯¯ã€‘æ‰¾ä¸åˆ° GameManagerï¼è¯·åŠ¡å¿…ä» MainMenu åœºæ™¯å¯åŠ¨æ¸¸æˆï¼");
         }
     }
 }
